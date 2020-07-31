@@ -17,7 +17,7 @@ def parse_csv():
     dict_s1 = {}  # Словарь по Проект:Версия
     dict_s2 = {}
     for i in parser_csv_file():  # Строим Проект
-        if str(i[arg1_info]) in dict_s1.keys():
+        if str(i[arg1_info]) in dict_s1.keys() or str(i[arg1_info]) == 'Заказ оборудования': #Временная заглушка на пропуск проекта заказ оборудования
             pass
         else:
             dict_s1[i[arg1_info]] = {}
@@ -61,6 +61,9 @@ def get_project_version(dict_s1, return_sep=None):
     else:
         for key in dict_s1:
             for val in dict_s1.get(key):
+                # if not val:
+                #     line_str = key
+                # else:
                 line_str = key + '/' + val
                 dict_str = {'oneline': line_str, 'project': key, 'version': val}
                 ver_list.append(dict_str)
@@ -104,9 +107,10 @@ def get_cnt_order(dict_s1, project_input=None, version_input=None):
     return cnt
 
 # print('Count = ', get_cnt_project_version())  # Вывод кол-ва Проектов/Версий
-# for i in get_project_version():
-#     print(i.get('oneline'))  # Вывод наименования Проекта/Версии одной строкой
-#     print('Count = ', get_cnt_order(i.get('project'), i.get('version')))  # Вывод кол-ва задач в Проекте/Версии
-#     for j in get_order_project_version(i.get('project'), i.get('version'), False):
-#         print(j.get('url') + ' ' + j.get('title') + ' ' + j.get('status'))  # Вывод ссылки, наименования и статуса
-#         # задачи в Проекте/Версии
+dict_s1, dict_s2 = parse_csv()
+for i in get_project_version(dict_s1):
+    print(i.get('oneline'))  # Вывод наименования Проекта/Версии одной строкой
+    print('Count = ', get_cnt_order(i.get('project'), i.get('version')))  # Вывод кол-ва задач в Проекте/Версии
+    for j in get_order_project_version(i.get('project'), i.get('version'), False):
+        print(j.get('url') + ' ' + j.get('title') + ' ' + j.get('status'))  # Вывод ссылки, наименования и статуса
+#        
