@@ -11,8 +11,8 @@ mouth_report = today + relativedelta(months=-1)
 mouth_plan = today + relativedelta(months=+1)
 
 
-def put_api(red_api_key: object, gen_csv: object = False, start_date: object = None) -> object:
-    red = redminelib.Redmine('http://red.eltex.loc', key=red_api_key)
+def put_api(url: str, red_api_key: str, gen_csv: object = False, start_date: object = None) -> object:
+    red = redminelib.Redmine(url, key=red_api_key)
     if gen_csv and start_date is not None:
         # print(' auth +', red.url, '\n','Ваше Имя:', red.user.get('current')) #Получение адреса и имени пользователя
         # print(' Ваш ID:', red.user.get('current').firstname) # Получение ID пользователя

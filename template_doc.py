@@ -10,9 +10,9 @@ months_number = {1: 'Январь', 2: 'Февраль', 3: 'Март', 4: 'Ап
                  9: 'Сентябрь', 10: 'Октябрь', 11: 'Ноябрь', 12: 'Декабрь'}
 
 
-def create_report(red_api_key: object) -> object:
+def create_report(url: str, red_api_key: str) -> object:
     dict_s1 = csv_parser.parse_csv()
-    red = red_api.put_api(red_api_key)
+    red = red_api.put_api(url, red_api_key)
     xml_body = open('tReport/template.fodt').read()
     xml_body_template = Template(xml_body)
     report_user = red.user.get('current').lastname + ' ' + red.user.get('current').firstname[0] + '.'

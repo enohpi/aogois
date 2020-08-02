@@ -6,6 +6,19 @@
 import csv
 
 csv_file_path = 'artifacts/issues_control.csv'
+url_issue = 'http://red.eltex.loc/issues/'
+status_list = {'New': 'Новая',
+                            'In Progress': 'В процессе',
+                            'Resolved': 'В процессе',
+                            'Code Review': 'В процессе',
+                            'Feedback': 'В процессе',
+                            'Testing': 'В процессе',
+                            'Re-opened': 'Переоткрыта',
+                            'Pending': 'В ожидании',
+                            'Wait Release': 'В ожидании',
+                            'Confirming': 'В ожидании',
+                            'Closed': 'Выполнено',
+                            }
 
 
 def parse_csv():
@@ -17,20 +30,20 @@ def parse_csv():
     dict_s1 = {}  # Словарь по Проект:Версия
     dict_s2 = {}
     for i in parser_csv_file():  # Строим Проект
-        if str(i[arg1_info]) in dict_s1.keys():
+        if str(i[arg1_info]) in dict_s1.keys():  # Проверка по уже заполненному Проекту
             pass
         else:
             dict_s1[i[arg1_info]] = {}
             for j in parser_csv_file():  # Строим Версию
                 if str(i[arg1_info]) in j[arg1_info]:  # Проверка по Проекту
-                    if dict_s1.get(str(i[arg1_info])).get(j[arg2_info], {}):
+                    if dict_s1.get(str(i[arg1_info])).get(j[arg2_info], {}):  # Проверка по уже заполненной Версии
                         pass
                     else:
-                        for k in parser_csv_file():
-                            if str(i[arg1_info]) in k[arg1_info]:
-                                if str(j[arg2_info]) in k[arg2_info]:
+                        for k in parser_csv_file():  # Строим Задачи
+                            if str(i[arg1_info]) in k[arg1_info]:  # Проверка по Проекту
+                                if str(j[arg2_info]) in k[arg2_info]:  # Проверка по Версии
                                     dict_s2[k[arg5_info]] = [k[arg4_info], k[arg3_info]]
-                        if str(j[arg2_info]) == '':
+                        if str(j[arg2_info]) == '':  # Проверка на отсутствие Версии
                             dict_s1[str(i[arg1_info])][' '] = dict_s2
                         else:
                             dict_s1[str(i[arg1_info])][j[arg2_info]] = dict_s2
@@ -77,21 +90,10 @@ def get_order_project_version(dict_s1, project_input=None, version_input=None, c
     order_list = []
     status_translate = {}
     if convert_status:
-        status_translate = {'New': 'Новая',
-                            'In Progress': 'В процессе',
-                            'Resolved': 'В процессе',
-                            'Code Review': 'В процессе',
-                            'Feedback': 'В процессе',
-                            'Testing': 'В процессе',
-                            'Re-opened': 'Переоткрыта',
-                            'Pending': 'В ожидании',
-                            'Wait Release': 'В ожидании',
-                            'Confirming': 'В ожидании',
-                            'Closed': 'Выполнено',
-                            }
+        status_translate = status_list
     if project_input and version_input:
         for key, value in dict_s1.get(project_input).get(version_input).items():
-            url_value = 'http://red.eltex.loc/issues/' + key
+            url_value = url_issue + key
             title_value = ' (' + value[0] + ')'
             try:
                 status_value = status_translate[value[1]]

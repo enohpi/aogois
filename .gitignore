@@ -132,3 +132,6 @@ dmypy.json
 .vscode
 
 /artifacts
+
+# ignore .idea
+.idea
